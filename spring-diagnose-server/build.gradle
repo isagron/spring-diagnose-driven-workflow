@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.bmuschko.nexus'
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/groups/public" }
+
+}
+configurations.all {
+    exclude module: 'log4j-slf4j-impl'
+}
+dependencies {
+
+
+
+
+    implementation ('com.github.isagron:message_queue:1.0.3-SNAPSHOT')
+    implementation 'com.github.isagron:rabbitmq-entry-point:1.0.0-SNAPSHOT'
+    implementation 'com.github.isagron:ddw_clients_api:1.0.3-SNAPSHOT'
+    implementation 'com.github.isagron:ddw_diagnose_core:1.0.3-SNAPSHOT'
+    implementation ('org.springframework.boot:spring-boot-starter-web'){
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+    }
+    compile project(':spring-diagnose-client')
+
+    compileOnly ('org.projectlombok:lombok')
+    testImplementation ('org.springframework.boot:spring-boot-starter-test'){
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+    }
+    dependencies {
+        dependency 'com.google.guava:guava:23.5-jre'
+    }
+}

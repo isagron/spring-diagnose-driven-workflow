@@ -1,0 +1,5 @@
+rootProject.name = 'spring-diagnose-driven-workflow'
+
+include 'spring-diagnose-server'
+include 'spring-diagnose-client'
+
